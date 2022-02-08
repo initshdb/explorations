@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.nitish.jartoexe</groupId>
+    <artifactId>jar-to-exe</artifactId>
+    <version>1.0</version>
+
+    <properties>
+        <!-- Refers to the JDK on the system.
+        The JRE in the final zip will be bundled from the system's JDK -->
+        <sys.java.home>${env.JAVA_HOME}</sys.java.home>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+
+            <!-- Wraps the installer jar into an .exe -->
+            <plugin>
+                <groupId>com.akathist.maven.plugins.launch4j</groupId>
+                <artifactId>launch4j-maven-plugin</artifactId>
+                <version>1.7.25</version>
+                <executions>
+                    <execution>
+                        <id>jar-to-exe</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>launch4j</goal>
+                        </goals>
+                        <configuration>
+                            <headerType>gui</headerType>
+                            <stayAlive>true</stayAlive>
+                            <jar>${project.build.directory}/${project.build.finalName}.jar</jar>
+                            <outfile>${project.build.directory}/${project.build.finalName}.exe</outfile>
+                            <manifest>${project.basedir}/src/main/resources/${project.artifactId}.manifest</manifest>
+                            <classPath>
+                                <!-- The main class to invoke on executing the .exe -->
+                                <mainClass>org.nitish.jartoexe.HelloWorldGUI</mainClass>
+
+                            </classPath>
+                            <jre>
+                                <minVersion>1.8.0</minVersion>
+                                <jdkPreference>preferJre</jdkPreference>
+
+                                <!-- Relative path to the JRE in the final zip bundle, to launch the exe/jar-->
+                                <path>./lib/jre</path>
+
+                                <!-- Runtime arguments -->
+                                <opts>
+                                    <!-- Run time arguments can be passed using <opt> as below -->
+                                    <!--<opt>-Dparam=value</opt>-->
+                                </opts>
+
+                            </jre>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Bundles the .exe and JRE in a zip file -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.3.0</version>
+                <executions>
+                    <execution>
+                        <!-- Bundle the .exe and jre into a final release zip -->
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <appendAssemblyId>false</appendAssemblyId>
+                            <descriptors>
+                                <!-- Defines the files that need to be bundled in the final zip-->
+                                <descriptor>${project.basedir}/src/main/resources/assembly.xml</descriptor>
+                            </descriptors>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
