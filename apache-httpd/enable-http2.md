@@ -6,9 +6,10 @@
 - To create self-signed certs, run the below command on a unix bash - on windows you can use open `git-bash.exe` that comes installed with git and also has openssl tools bundled into it, OR you can download [CYGWIN tools](https://www.ssl.com/how-to/install-openssl-on-windows-with-cygwin/) to emulate unix commands)
 
   ``` 
-  openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /c/Users/<location>/Apache24/certs/server.key -out /c/Users/<location>/Apache24/certs/server.crt
+  openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /c/Users/<location>/Apache24/conf/server.key -out /c/Users/<location>/Apache24/conf/server.crt
   ``` 
-   This will prompt you to enter some details, fill them appropriately. The `Common Name (e.g. server FQDN or YOUR name)` is ideally the domain name/IP with which you access the webpage, but for development purpose we keep it as `localhost`
+   `C:\Users\<location>\Apache24` here is the root directory `${SRVROOT}` for the apache server.
+   Executing the `openssl` command will prompt you to enter some details, fill them appropriately. The `Common Name (e.g. server FQDN or YOUR name)` is ideally the domain name/IP with which you access the webpage, but for development purpose we keep it as `localhost`
    ```
    Country Name (2 letter code) [AU]:IN
    State or Province Name (full name) [Some-State]:Maharashtra
@@ -18,7 +19,7 @@
    Common Name (e.g. server FQDN or YOUR name) []:localhost
    Email Address []:admin@app.com
    ```
-  This will create `server.key` and `server.crt` files into the `C:\Users\<location>\Apache24\certs` directory. `Apache24` here is the root directory `${SRVROOT}` for the apache server.
+  This will create `server.key` and `server.crt` files into the `C:\Users\<location>\Apache24\conf` directory.
 - In the `httpd.conf` file uncomment the below 3 lines,
   ```
   LoadModule ssl_module modules/mod_ssl.so
